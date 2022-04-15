@@ -1,6 +1,6 @@
 ### Code Package for MMFA
 
-Yusheng, Cheng; Qingyan, Li; Yibin, Wang; Weijie, Zheng. Multi-view multi-label learning for view feature attention allocation.
+Yusheng, Cheng; Qingyan, Li; Yibin, Wang; Weijie, Zheng. Multi-view multi-label learning with view feature attention allocation.
 
 ### Environment
 - Python: 3.6.13
