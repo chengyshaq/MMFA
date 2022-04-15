@@ -16,6 +16,7 @@ class ScaledDotProductAttention(nn.Module):
         	similarity = similarity * scale
         if attn_mask:      	
         	similarity = similarity.masked_fill_(attn_mask, -np.inf)
+
         similarity = self.softmax(similarity)
 		#add dropout
         similarity = self.dropout(similarity)

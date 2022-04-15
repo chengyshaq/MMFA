@@ -11,7 +11,7 @@ def main_prediction(features, label_nums, model_state_path, args, model_args):
     view_feature_nums_list = [features[code].shape[1] for code in view_code_list]
     view_blocks = [ViewBlock(view_code_list[i], view_feature_nums_list[i],
                              args['comm_feature_nums']) for i in range(len(view_code_list))]
-    mmfa_model = MMFA_Model(view_blocks, args['comm_feature_nums'],
+    mmfa_model = MMFA_Model(view_blocks, args['comm_feature_nums'],view_feature_nums_list,
                              label_nums, model_args)
     mmfa_model.load_state_dict(torch.load(model_state_path))
     mmfa_model.eval()

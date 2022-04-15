@@ -8,7 +8,8 @@ from model.multi_head_attention import MultiHeadAttention
 
 class MMFA_Model(nn.Module):
 
-    def __init__(self, view_blocks, comm_feature_num, label_num, model_args=None):
+    def __init__(self, view_blocks, comm_feature_num, view_feature_list, label_num, model_args=None):
+
         super(MMFA_Model, self).__init__()
         self.view_blocks = nn.Sequential()
         self.view_blocks_codes = []
@@ -21,7 +22,7 @@ class MMFA_Model(nn.Module):
         view_count = len(self.view_blocks)
 
         self.final_feature_num = (view_count + 1) * comm_feature_num
-        self.attention = MultiHeadAttention(comm_feature_num,view_count)
+        self.attention = MultiHeadAttention(comm_feature_num, view_count, view_feature_list)
         self.fc_comm_extract = nn.Linear(comm_feature_num, comm_feature_num)
         self.fc_predictor = nn.Linear(self.final_feature_num, label_num)
 
@@ -32,6 +33,7 @@ class MMFA_Model(nn.Module):
             self.discriminator = nn.Linear(comm_feature_num, view_count)
 
     def forward(self, x, is_training=True, labels = None):
+
         view_features_dict = self._extract_view_features(x)
         final_features = torch.zeros(x[0].shape[0], self.final_feature_num)
         comm_feature = 0.0  # common representation vector
@@ -39,9 +41,10 @@ class MMFA_Model(nn.Module):
         GAN_loss = 0.0
         view_count = len(self.view_blocks)
 
-        comm_predictions = 0.0
+        comm_predictions = 0.0 
 
         for view_code, view_feature in view_features_dict.items():
+
             view_code = int(view_code)
             final_features[:, view_code * self.comm_feature_num: (view_code + 1) *
             self.comm_feature_num] = view_feature[0]
@@ -64,7 +67,7 @@ class MMFA_Model(nn.Module):
 
         final_features[:, -self.comm_feature_num:] = comm_feature
 
-        attention = self.attention(comm_feature, final_features, view_feature[0])
+        attention = self.attention(comm_feature, final_features, x)
         label_predictions = self.fc_predictor(final_features + attention)
 
 

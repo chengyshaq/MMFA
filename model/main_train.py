@@ -13,7 +13,7 @@ def main_mmfa_model_train(features, labels, args,
                            model_args = None, weight_decay=1e-5, fold=1):
     # step 1: load views features and labels
     views_dataset = ViewsDataset(features, labels)
-    views_data_loader = DataLoader(views_dataset, batch_size=128, shuffle=True,
+    views_data_loader = DataLoader(views_dataset, batch_size=64, shuffle=True,
                                    num_workers=0)
     # step 2: instantiation View Model
     label_nums = labels.shape[1]
@@ -21,7 +21,7 @@ def main_mmfa_model_train(features, labels, args,
     view_feature_nums_list = [features[code].shape[1] for code in view_code_list]
     view_blocks = [ViewBlock(view_code_list[i], view_feature_nums_list[i],
                              args['comm_feature_nums']) for i in range(len(view_code_list))]
-    mmfa_model = MMFA_Model(view_blocks, args['comm_feature_nums'],
+    mmfa_model = MMFA_Model(view_blocks, args['comm_feature_nums'],view_feature_nums_list,
                              label_nums, model_args)
 
     # step 3: init optimizer
